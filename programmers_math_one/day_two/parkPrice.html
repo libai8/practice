@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>公园门票</title>
+</head>
+<body>
+	<script>
+
+		getParkTicketPrice(4, 'M', new Date()); // 0
+		getParkTicketPrice(12, 'F', new Date('2020/6/1')); // 0
+		getParkTicketPrice(12, 'F', new Date()); // 40
+		getParkTicketPrice(15, 'M', new Date()); // 60
+		getParkTicketPrice(20, 'F', new Date(), true); // 60
+		getParkTicketPrice(20, 'M', new Date(), false); // 120
+		getParkTicketPrice(60, 'M', new Date(), false); // 60
+		getParkTicketPrice(70, 'M', new Date()); // 0
+		getParkTicketPrice(60, 'F', new Date('2020/3/8')); // 0
+		getParkTicketPrice(30, 'M', new Date('2020/5/1')); // 108
+		getParkTicketPrice(30, 'M', new Date(), false, true); // 108
+		getParkTicketPrice(30, 'M', new Date('2020/7/20')); // 96
+
+		function getParkTicketPrice (age, gender, date, isStudent, isWithChildren, isWithIDcard) {
+			let price = calcTicketPrice(age, gender, date, isStudent, isWithChildren, isWithIDcard);
+			console.log(`票价: ${price}`);
+		}
+
+		function calcTicketPrice (age, gender, date, isStudent, isWithChildren, isWithIDcard) {
+			let totalPrice = 120;
+			let year = date.getFullYear();
+			let month = date.getMonth() + 1;
+			let day = date.getDate();
+			let week = date.getDay();
+
+			if (isWomenDay(month, day) && gender === 'F') {
+				return 0;
+			}
+
+			if (age < 6) {
+				return 0;
+			} else if (age >= 6 && age <= 12) {
+				if (isChildrenDay(month, day)) {
+					return 0;
+				} else {
+					return totalPrice / 3;
+				}
+			} else if (age >= 13 && age <= 17) {
+				return totalPrice / 2;
+			} else if (age >= 18 && age <= 22) {
+				alert('请出示学生证');
+				return totalPrice / 2;
+			}else if (age >= 60 && age <= 65) {
+				alert('请出示身份证');
+				return totalPrice / 2;
+			} else if (age >= 66) {
+				alert('请出示身份证');
+				return 0;
+			}
+
+			if (isHoliday(year, month, day, week)) {
+				return totalPrice * 0.9;
+			} else if (week === 1) {
+				return totalPrice * 0.8;
+			} else if (age >= 18 && isWithChildren) {
+				return totalPrice * 0.9;
+			}
+
+			return totalPrice;
+		}
+
+		function isChildrenDay (month, day) {
+			return month === 6 && day === 1
+		}
+
+		function isWomenDay (month, day) {
+			return month === 3 && day === 8
+		}
+
+		function isHoliday (year, month, day, week) {
+			return !isWorkday(year, month, day, week);
+		}
+
+		function isWorkday (year, month, day, week) {
+			if (!validateDate(year, month, day)) {
+				console.log('输入的日期格式有误');
+			}
+			let holidays = getHolidays();
+			let workdays = getWorkdays();
+			let date = [year, month, day].join('-');
+			return workdays.includes(date) ||  week >= 1 && week <= 5 && !holidays.includes(date);
+		}
+
+		function validateDate (year, month, day) {
+			if (!year || !month || !day) {
+				return false;
+			}
+			let date = [year, month, day].join('-');
+			return new Date(date).getDate() === day;
+		}
+
+		function getHolidays () {
+			let holidays = [
+				'2020-1-1', 
+				'2020-1-24', 
+				'2020-1-25', 
+				'2020-1-26', 
+				'2020-1-27', 
+				'2020-1-28', 
+				'2020-1-29', 
+				'2020-1-30', 
+				'2020-1-31', 
+				'2020-2-1', 
+				'2020-2-2', 
+				'2020-4-4', 
+				'2020-4-5', 
+				'2020-4-6', 
+				'2020-5-1', 
+				'2020-5-2', 
+				'2020-5-3', 
+				'2020-5-4', 
+				'2020-5-5', 
+				'2020-6-25', 
+				'2020-6-26', 
+				'2020-6-27', 
+				'2020-10-1', 
+				'2020-10-2', 
+				'2020-10-3', 
+				'2020-10-4', 
+				'2020-10-5', 
+				'2020-10-6', 
+				'2020-10-7', 
+				'2020-10-8'
+			];
+			return holidays;
+		}
+
+		function getWorkdays () {
+			let workdays = [
+				'2020-1-19',
+				'2020-4-26',
+				'2020-5-9',
+				'2020-6-28',
+				'2020-9-27',
+				'2020-10-10'
+			];
+			return workdays;
+		}
+	</script>
+</body>
+</html>

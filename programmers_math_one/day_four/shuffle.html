@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>鸽尾式洗牌</title>
+</head>
+<body>
+	<script>
+		/*
+		
+			鸽尾式的洗牌是一种洗牌方法，分为 2 步：
+
+
+			a. 把一副牌从正中一分为二，分为数量相同的A组（靠下）和B组（靠上） 
+
+			b. 左右手分别拿着A组和B组，将它们相对放置，然后每组交替各出一张（先A后B循环），就这样一张一张地盖下去，直到两组又合并为一组
+
+
+			经过以上2步，一轮洗牌完成。问：假设我们拿一副排好序的新牌来用鸽尾式洗牌，洗多少轮后纸牌会恢复最初的顺序？
+
+
+			请写一个程序来完成计算，并打印出每轮洗牌后的纸牌顺序
+
+		*/
+
+		function cardShuffle (cards) {
+			let count = 0;
+			let newCards = [];
+
+			while (cards.toString() !== newCards.toString()) {
+
+				if (count === 0) {
+					newCards = deepCopy(cards);
+				}
+				
+				newCards = shuffle(newCards);
+				count++;
+				
+				console.log('cardShuffle', count, newCards);
+			}
+
+		}
+
+		function shuffle (arr) {
+			let middle = divide(arr);
+			let left = arr.slice(0, middle);
+			let right = arr.slice(middle, arr.length);
+			return merge(left, right);
+		}
+
+		function divide (arr) {
+			return Math.round(arr.length / 2) 
+		}
+
+		function merge (left, right) {
+			let i = 0;
+			let arr = []
+
+			while (i < left.length && i < right.length) {
+				arr.push(right[i]);
+				arr.push(left[i]);
+				i++;
+			}
+
+			if (i < left.length) {
+				arr.push(...left);
+			}
+
+			if (i < right.length) {
+				arr.push(...right);
+			}
+
+			return arr;
+		}
+
+		function deepCopy (obj) {
+			return JSON.parse(JSON.stringify(obj));
+		}
+
+		let cards = Array.from(new Array(54), (val, index) => index + 1);
+
+		console.log('cards', cards);
+
+		cardShuffle(cards);
+
+	</script>
+</body>
+</html>

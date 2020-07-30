@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>罗马数字转十进制（严格）</title>
+</head>
+<body>
+	<script>
+		let romVal = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
+
+		function isValid (str) {
+			let weight = 0;
+			let count = 0;
+			let subFlag = false; // 左减个数不能超过1个，如果超过，置为true
+
+			for (let i = str.length - 1; i >= 0; i--) {
+
+				let curWeight = romVal[str[i]];
+
+				if (curWeight > weight) {
+					count = 1;
+				} else if (curWeight === weight) {
+					if (subFlag) {
+						return false;
+					}
+					count++;
+				} else {
+					if (weight / curWeight > 10) {
+						return false;
+					} else if (curWeight !== 1 && curWeight !== 10 && curWeight !== 100) {
+						return false;
+					} else {
+						count = 1;
+						subFlag = true;
+					}
+				}
+
+				if (count > 3 && curWeight < 1000 && curWeight !== 1 || count > 4 && curWeight < 1000) {
+					return false;
+				} else {
+					weight = curWeight;
+				}
+			}
+			return true;
+		}
+
+		function rom2int (str) {
+			if (!isValid(str)) {
+				console.log('无效数值', str);
+				return;
+			}
+
+			let int = 0;
+
+			for (let i = 0; i <= str.length - 1; i++) {
+				if (romVal[str[i]] > romVal[str[i - 1]]) {
+					int += romVal[str[i]] - 2 * romVal[str[i - 1]];
+				} else {
+					int += romVal[str[i]];
+				}
+			}
+
+			console.log('int', str, int);
+			return int;
+		}
+
+		rom2int('MD');
+		rom2int('DM');
+		rom2int('VL');
+		rom2int('MMMMM');
+		rom2int('CM');
+		rom2int('MVV');
+		rom2int('DDM');
+		rom2int('IM');
+		rom2int('IIII');
+		rom2int('IV');
+	</script>
+</body>
+</html>

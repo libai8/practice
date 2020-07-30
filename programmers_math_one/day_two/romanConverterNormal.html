@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>罗马数字转十进制</title>
+</head>
+<body>
+	<script>
+		let romVal = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
+
+		function isValid (str) {
+			let weight = 0;
+			let count = 0;
+
+			for (let i = str.length - 1; i >= 0; i--) {
+
+				let curWeight = romVal[str[i]];
+
+				if (curWeight > weight) {
+					count = 1;
+				} else if (curWeight === weight) {
+					count++;
+				} else {
+					if (weight / curWeight > 10) {
+					// if (!(curWeight === 1 || curWeight === 10 || curWeight === 100)) {
+						console.log('无效数值 1', str, curWeight);
+						return false;
+					} else {
+						count = 1;
+					}
+				}
+
+				if (count > 3 && weight < 1000) {
+					console.log('无效数值 2', str);
+					return false;
+				} else {
+					weight = curWeight;
+				}
+			}
+			return true;
+		}
+
+		function rom2int (str) {
+			if (!isValid(str)) {
+				console.log('无效数值', str);
+				return;
+			}
+
+			let int = 0;
+
+			for (let i = 0; i <= str.length - 1; i++) {
+				if (romVal[str[i]] > romVal[str[i - 1]]) {
+					int += romVal[str[i]] - 2 * romVal[str[i - 1]];
+				} else {
+					int += romVal[str[i]];
+				}
+			}
+
+			console.log('int', str, int);
+			return int;
+		}
+
+		rom2int('MD');
+		rom2int('DM');
+		rom2int('VL');
+		rom2int('MMMMM');
+		rom2int('CM');
+		rom2int('MVV');
+		rom2int('DDM');
+
+		function isValid_old (str) {
+			let weight = 0;
+			let count = 0;
+
+			for (let i = str.length - 1; i >= 0; i--) {
+
+				let curWeight = romVal[str[i]];
+
+				if (curWeight > weight) {
+					count = 1;
+				} else if (curWeight === weight) {
+					count++;
+				} else {
+					if (weight / curWeight > 10) {
+						return false;
+					} else {
+						count = 1;
+					}
+				}
+
+				if (count > 3 && weight < 1000) {
+					return false;
+				} else {
+					weight = curWeight;
+				}
+			}
+			return true;
+		}
+	</script>
+</body>
+</html>

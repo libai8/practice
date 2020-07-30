@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>递归版的快排</title>
+</head>
+<body>
+	<script>		
+
+		function sort (arr, low, high) {
+
+			if (low >= high) {
+				return -1;
+			}
+
+			while (low < high) {
+				while(low < high && arr[high] >= arr[low]) {
+					high--;
+				}
+				swap(arr, low, high);
+				while(low < high && arr[low] < arr[high]) {
+					low++;
+				}
+				swap(arr, low, high);
+			}
+			console.log('sort', low)
+			return low;
+		}
+
+		function swap (arr, i, j) {
+			if (!arr) {
+				return;
+			}
+			if (arr.length < 2) {
+				return;
+			}
+			if (i < 0 || i >= arr.length || j < 0 || j >= arr.length) {
+				return;
+			}
+			if (i === j) {
+				return;
+			}
+			var temp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = temp;
+		}
+
+		function quickSortIteration (arr, low, high) {
+			// 迭代版
+			if (low >= high) {
+				return;
+			}
+
+			let regions = [[low, high]];
+			for (var i = 0; i < regions.length; i++) {
+				var index = sort(arr, regions[i][0], regions[i][1]);
+				if (index !== -1) {
+					regions.push([regions[i][0], index]);
+					regions.push([index + 1, regions[i][1]]);
+				}
+			}
+		}
+
+		function quickSortRecursion (arr, low, high) {
+			// 递归版
+			if (low >= high) {
+				return;
+			}
+			var index = sort(arr, low, high);
+			quickSortRecursion(arr, low, index);
+			quickSortRecursion(arr, index + 1, high);
+		}
+
+
+		// var arr = [5, 3, 2, 0, 6, 8, 1, 10];
+		var arr = [49, 38, 65, 97, 23, 22, 76, 1, 5, 8, 2, 0, -1, 22]
+		
+		// quickSortRecursion(arr, 0, arr.length - 1)
+		quickSortIteration(arr, 0, arr.length - 1)
+
+		console.log(arr)
+	</script>
+</body>
+</html>
